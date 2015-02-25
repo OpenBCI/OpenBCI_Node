@@ -3,14 +3,18 @@ Python and Node.js with OpenBCI
 
 ![alt tag](https://raw.github.com/theRealWardo/Python_OpenBCI/master/architecture.png)
 
-- **open_bci.py** manages the connection between the OpenBCI board and Python
+- **open_bci_v3.py** manages the connection between the OpenBCI board and Python
 - **udp_server.py** exposes the data over UDP
 - **socket_server.js** a Node.js server that retransmits the data over a Web Socket
 - **htdocs/index.html** a hack to display data using D3.js
 
 Running the Server
 --------------
-
+- Get python scripts from https://github.com/OpenBCI/OpenBCI_Python:
+open_bci_v3.py
+udp_server.py
+python udp_client.py
+socket_client.py
 - Plugin the board
 - `python udp_server.py --json` (add the `--filter_data` command to enable the band-stop filter on the board)
 - Optionally use `python udp_client.py --json` to verify data is coming through
@@ -26,6 +30,7 @@ Dependency List
 
 Python UDP demos require:
 - pyserial
+- numpy
 
 Node sample requires:
 - socket.io
