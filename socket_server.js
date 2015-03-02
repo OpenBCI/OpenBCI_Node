@@ -44,7 +44,6 @@ UDPClient.prototype.onListening = function() {
  * @param {string} message The message that was received.
  */
 UDPClient.prototype.onMessage = function(msg) {
-  //console.log(JSON.parse(msg.toString()));
   this.events.emit('sample', JSON.parse(msg.toString()));
 };
 
@@ -92,5 +91,4 @@ var server = new OpenBCIServer(SERVER_HOST, SERVER_PORT, HTDOCS_PATH);
 
 client.events.on('sample', function(data) {
   server.socket.sockets.emit('openbci', data);
-  console.log(data);
 });
