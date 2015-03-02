@@ -1,100 +1,37 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
- 
-svg {
-  font: 10px sans-serif;
+
+canvas {
+  display: block;
 }
- 
-.line {
-  fill: none;
-  stroke: #000;
-  stroke-width: 1.5px;
-}
- 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
+
  
 </style>
 <body>
 <script src="/socket.io/socket.io.js"></script>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://smoothiecharts.org/smoothie.js"></script>
 <script>
 
-// Based on work at http://bost.ocks.org/mike/path/
-
-function Wave() {
-  var n = 200;
-  this.data = d3.range(n).map(function () { return 0; });
- 
-  var margin = {top: 0, right: 20, bottom: 0, left: 40},
-      width = 960 - margin.left - margin.right,
-      height = 100 - margin.top - margin.bottom;
-
-  this.x = d3.scale.linear()
-      .domain([0, n - 1])
-      .range([0, width]);
-  var x = this.x;
-
-  var y = d3.scale.linear()
-      .domain([0.0000000459, 0.000000046])
-      .range([height, 0]);
-
-  this.line = d3.svg.line()
-      .x(function(d, i) { return x(i); })
-      .y(function(d, i) { return y(d); });
-
-  var svg = d3.select("body").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  svg.append("defs").append("clipPath")
-      .attr("id", "clip")
-    .append("rect")
-      .attr("width", width)
-      .attr("height", height);
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + y(0) + ")")
-      .call(d3.svg.axis().scale(this.x).orient("bottom"));
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(d3.svg.axis().scale(y).orient("left"));
-
-  this.path = svg.append("g")
-      .attr("clip-path", "url(#clip)")
-    .append("path")
-      .datum(this.data)
-      .attr("class", "line")
-      .attr("d", this.line);
+function Timeline() {
+  this.data = new TimeSeries();
+  this.chart = new SmoothieChart();
+  this.chart.addTimeSeries(this.data, { strokeStyle: 'rgba(0, 255, 0, 1)', fillStyle: 'rgba(0, 255, 0, 0.2)', lineWidth: 1 });
+  var chartEl = document.createElement("CANVAS");
+  chartEl.setAttribute("width", "400");
+  chartEl.setAttribute("height", "200");
+  this.chart.streamTo(chartEl, 500);
+  document.body.appendChild(chartEl);
 }
 
-Wave.prototype.sample = function(s) {
-  this.data.push(s);
-  // redraw the line, and slide it to the left
-  this.path
-      .attr("d", this.line)
-      .attr("transform", null)
-    .transition()
-      .duration(10)
-      .ease("linear")
-      .attr("transform", "translate(" + this.x(-1) + ",0)");
- 
-  // pop the old data point off the front
-  this.data.shift();
-};
+Timeline.prototype.sample = function (s) {
+  this.data.append(new Date().getTime(), s);
+}
+
 
 var waves = [];
 for (var i = 0; i < 8; i++) {
-  waves.push(new Wave());
+  waves.push(new Timeline());
 }
 
 var process = 1;
@@ -103,7 +40,7 @@ var socket = io.connect('http://127.0.0.1');
 socket.on('openbci', function (sample) {
   if (process % 3 == 0) {
     for (var i = 0; i < 8; i++) {
-      waves[i].sample(sample[i])
+        waves[i].sample(sample[i]);
     }
     process = 1;
   }
