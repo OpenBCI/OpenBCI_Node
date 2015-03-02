@@ -10,20 +10,19 @@ Python and Node.js with OpenBCI
 
 Running the Server
 --------------
-- Get python scripts from https://github.com/OpenBCI/OpenBCI_Python:
-open_bci_v3.py
-udp_server.py
-python udp_client.py
-socket_client.py
-- Plugin the board
-- `python udp_server.py --json` (add the `--filter_data` command to enable the band-stop filter on the board)
-- Optionally use `python udp_client.py --json` to verify data is coming through
 - Run `npm install` to make sure you have the dependencies
 - Run `node socket_server.js`
-- Visit [http://127.0.0.1:8880](http://127.0.0.1:8880) to see your brain waves
-- Optionally use `python socket_client.py` to view the Web Socket data coming back into Python (requires socketio-client)
 
-Running the Python server/client without the --json flag will cause the OpenBCISample object to be used as the data transmission mechanism. This is for people that want to do some processing in Python.
+- Plugin the OpenBCI V3 board
+- Run python scripts from [https://github.com/OpenBCI/OpenBCI_Python]https://github.com/OpenBCI/OpenBCI_Python:
+> python user.py --p "<serial port>" --add udp_server 127.0.0.1 8888 --add print
+- Modify settings according to desired behaviour. [https://github.com/OpenBCI/OpenBCI_Python/](See OpenBCI_Python README)
+> --> /start
+- Visit [http://127.0.0.1:8880](http://127.0.0.1:8880) to see your brain waves
+
+Optionally 
+- Use `python udp_client.py --json` from the scripts folder to verify data is coming through
+- Use `python socket_client.py` from the scripts folder to view the Web Socket data coming back into Python (requires socketio-client)
 
 Dependency List
 --------------
