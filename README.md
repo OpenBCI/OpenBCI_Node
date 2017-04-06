@@ -14,7 +14,7 @@ Running the Server
 - Plugin the OpenBCI V3 Dongle and turn on the Board
 - Run python scripts from (https://github.com/OpenBCI/OpenBCI_Python):
 
-`python user.py --p "<serial port>" --add udp_server 127.0.0.1 8888 --add print`
+`python user.py -p "<serial port>" --add udp_server 127.0.0.1 8888 --add print`
 
 - Modify settings according to desired behaviour. See OpenBCI_Python [README](https://github.com/OpenBCI/OpenBCI_Python/)
 - Start UDP server `--> /start`
